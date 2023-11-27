@@ -17,6 +17,8 @@ Here's a huge tip for making message lists : If you put a blank message in your 
 
 There's also a way to delay messages that are sent with the convar `cum_msg_delay` which influences all message types. The delay is in seconds (should be obvious lol)
 
+There's also a typing based delay, added in CUM v1.5.0 to use it simply type `cum_typing_delay_enabled 1` and set the typing speed (in characters per second) with `cum_typing_speed`
+
 If you really want to spam (which I do not recommened and may or may not put you at major risk for being banned/kicked from a server) then you can use the shapes feature that was introduced in version 1.1.0 of the CUM. The shapes feature can be accessed through the following convars
 - `cum_kill_msgs_shape_enabled` : Sets whether or not the shapes feature for kill messages is enabled
 - `cum_kill_msgs_shape` : changes the shape of the shapes feature for kill messages, 0 is a line and 1 is a sine wave
