@@ -1,0 +1,370 @@
+global function cum_Init
+global function cum_send_kill_msg
+global function cum_send_death_msg
+
+void function cum_Init()
+{
+    AddCallback_OnReceivedSayTextMessage( cum_send_response_msg )
+
+}
+
+array<string> sine_wave_offsets = [ ".",". ",".     ",".          ",".                 ",".                       ",".                           ",".                             ",".                             ",".                          ",".                     ",".              ",".        ",".   ","." ]
+
+// Create a variable integer to represent the index of the next kill msg to select
+int next_kill_msg_index = 0
+int next_response_msg_index = 0
+
+void function cum_send_kill_msg( entity victim, entity attacker )
+{
+    // If the ConVar cum_kill_msgs_enabled is 0 then return and don't run the rest of the function
+    if( GetConVarInt( "cum_kill_msgs_enabled" ) == 0 )
+    {
+        return
+    }
+
+    // If the ConVar cum_kill_msgs doesn't have the splitter character defined in the ConVar cum_msgs_splitter then go ahead and send the single msg in the ConVar cum_kill_msgs and return to end the function
+    if( GetConVarString( "cum_kill_msgs" ).find( GetConVarString( "cum_msgs_splitter" ) ) == null )
+    {
+        // Create a string that will have proxies replaced if it contains them
+        string kill_msg = GetConVarString( "cum_kill_msgs" )
+
+        // If the ConVar cum_kill_msgs contains the string from the ConVar cum_victim_name_proxy then replace the proxy in the variable string with the victim's name
+        if( GetConVarString( "cum_kill_msgs" ).find( GetConVarString( "cum_victim_name_proxy" ) ) != null )
+        {
+            kill_msg = StringReplace( kill_msg, GetConVarString( "cum_victim_name_proxy" ), victim.GetPlayerName() )
+        }
+        // If the ConVar cum_kill_msgs contains the string from the ConVar cum_attacker_name_proxy then replace the proxy in the variable string with the attacker's name
+        if( GetConVarString( "cum_kill_msgs" ).find( GetConVarString( "cum_attacker_name_proxy" ) ) != null )
+        {
+            kill_msg = StringReplace( kill_msg, GetConVarString( "cum_attacker_name_proxy" ), attacker.GetPlayerName() )
+        }
+
+        // If the ConVar cum_kill_msgs_shape_enabled is set to 1 (turned on) then run the function to send the shape and return to end the main function
+        if( GetConVarInt( "cum_kill_msgs_shape_enabled" ) == 1 )
+        {
+            cum_send_shape( GetConVarInt( "cum_kill_msgs_shape" ), kill_msg )
+            return
+        }
+        // Send chat msg
+        thread cum_send_delayed_msg( kill_msg )
+        return
+    }
+
+    // Make an array of the msgs from the ConVar cum_kill_msgs
+    array<string> kill_msgs = split( GetConVarString( "cum_kill_msgs" ), GetConVarString( "cum_msgs_splitter" ) )
+
+    // Loop through each msg in the kill_msgs array and check if it contains the string from the ConVar cum_victim_name_proxy.
+    foreach( msg_index, msg in kill_msgs )
+    {
+        // If the msg in the loop contains the string from the ConVar cum_victim_name_proxy then replace the msg in the array kill_msgs with a new string with the proxy replaced with the victim's name
+        if( msg.find( GetConVarString( "cum_victim_name_proxy" ) ) != null )
+        {
+            kill_msgs.remove( msg_index )
+            kill_msgs.insert( msg_index, StringReplace( msg, GetConVarString( "cum_victim_name_proxy" ), victim.GetPlayerName() ) )
+        }
+    }
+    // Loop through each msg in the kill_msgs array and check if it contains the string from the ConVar cum_attacker_name_proxy.
+    foreach( msg_index, msg in kill_msgs )
+    {
+        // If the msg in the loop contains the string from the ConVar cum_attacker_name_proxy then replace the msg in the array kill_msgs with a new string with the proxy replaced with the attacker's name
+        if( msg.find( GetConVarString( "cum_attacker_name_proxy" ) ) != null )
+        {
+            kill_msgs.remove( msg_index )
+            kill_msgs.insert( msg_index, StringReplace( msg, GetConVarString( "cum_attacker_name_proxy" ), attacker.GetPlayerName() ) )
+        }
+    }
+
+    // If the ConVar cum_kill_msgs_shape_enabled is set to 1 (turned on) then run the function to send the shape and input a random string from the array kill_msgs and then return to end the main function
+    if( GetConVarInt( "cum_kill_msgs_shape_enabled" ) == 1 )
+    {
+        cum_send_shape( GetConVarInt( "cum_kill_msgs_shape" ), kill_msgs[ RandomIntRange( 0, kill_msgs.len() ) ] )
+        return
+    }
+    // If the ConVar cum_kill_msgs_mode is set to 0 (random mode) then pick a random msg from the array
+    if( GetConVarInt( "cum_kill_msgs_mode" ) == 0 )
+    {
+        // Send a randomly chosen msg from the kill_msgs array in chat
+        thread cum_send_delayed_msg( kill_msgs[ RandomIntRange( 0, kill_msgs.len() ) ] )
+        return
+    }
+    if( GetConVarInt( "cum_kill_msgs_mode" ) == 1 )
+    {
+        thread cum_send_delayed_msg( kill_msgs[ next_kill_msg_index ] )
+        if( next_kill_msg_index == kill_msgs.len() - 1 )
+        {
+            next_kill_msg_index = 0
+            return
+        }
+        if( next_kill_msg_index < kill_msgs.len() )
+        {
+            next_kill_msg_index += 1
+        }
+    }
+}
+
+void function cum_send_death_msg( entity victim, entity attacker )
+{
+    // If the ConVar cum_death_msgs_enabled is 0 then return and don't run the rest of the function
+    if( GetConVarInt( "cum_death_msgs_enabled" ) == 0 )
+    {
+        return
+    }
+    // If the ConVar cum_death_msgs doesn't have the splitter character defined in the ConVar cum_msgs_splitter the go ahead and send the single msg in the ConVar cum_death_msgs and return to end the function
+    if( GetConVarString( "cum_death_msgs" ).find( GetConVarString( "cum_msgs_splitter" ) ) == null )
+    {
+        // Create a string that will have proxies replaced if it contains them
+        string death_msg = GetConVarString( "cum_death_msgs" )
+
+        // If the ConVar cum_death_msgs contains the string from the ConVar cum_victim_name_proxy then replace the proxy in the variable string with the victim's name
+        if( GetConVarString( "cum_death_msgs" ).find( GetConVarString( "cum_victim_name_proxy" ) ) != null )
+        {
+            death_msg = StringReplace( death_msg, GetConVarString( "cum_victim_name_proxy" ), victim.GetPlayerName() )
+        }
+        // If the ConVar cum_death_msgs contains the string from the ConVar cum_attacker_name_proxy then replace the proxy in the variable string with the attacker's name
+        if( GetConVarString( "cum_death_msgs" ).find( GetConVarString( "cum_attacker_name_proxy" ) ) != null )
+        {
+            // If the attacker is a player then replace the attacker name proxy with the player name
+            if( attacker.IsPlayer() == true ) {
+                death_msg = StringReplace( death_msg, GetConVarString( "cum_attacker_name_proxy" ), attacker.GetPlayerName() )
+            }
+        }
+
+        // If the ConVar cum_death_msgs_shape_enabled is set to 1 (turned on) then run the function to send the shape and return to end the main function
+        if( GetConVarInt( "cum_death_msgs_shape_enabled" ) == 1 )
+        {
+            cum_send_shape( GetConVarInt( "cum_death_msgs_shape" ), death_msg )
+            return
+        }
+
+        // Send chat msg
+        thread cum_send_delayed_msg( death_msg )
+        return
+    }
+    // Make an array of the msgs from the ConVar cum_death_msgs
+    array<string> death_msgs = split( GetConVarString( "cum_death_msgs" ), GetConVarString( "cum_msgs_splitter" ) )
+
+    // Loop through each msg in the death_msgs array and check if it contains the string from the ConVar cum_victim_name_proxy.
+    foreach( msg_index, msg in death_msgs )
+    {
+        // If the msg in the loop contains the string from the ConVar cum_victim_name_proxy then replace the msg in the array death_msgs with a new string with the proxy replaced with the victim's name
+        if( msg.find( GetConVarString( "cum_victim_name_proxy" ) ) != null )
+        {
+            death_msgs.remove( msg_index )
+            death_msgs.insert( msg_index, StringReplace( msg, GetConVarString( "cum_victim_name_proxy" ), victim.GetPlayerName() ) )
+        }
+    }
+    // Loop through each msg in the death_msgs array and check if it contains the string from the ConVar cum_attacker_name_proxy.
+    foreach( msg_index, msg in death_msgs )
+    {
+        // If the msg in the loop contains the string from the ConVar cum_attacker_name_proxy then replace the msg in the array death_msgs with a new string with the proxy replaced with the attacker's name
+        if( msg.find( GetConVarString( "cum_attacker_name_proxy" ) ) != null )
+        {
+            death_msgs.remove( msg_index )
+            death_msgs.insert( msg_index, StringReplace( msg, GetConVarString( "cum_attacker_name_proxy" ), attacker.GetPlayerName() ) )
+        }
+    }
+
+    // If the ConVar cum_death_msgs_shape_enabled is set to 1 (turned on) then run the function to send the shape and input a random string from the array death_msgs and then return to end the main function
+    if( GetConVarInt( "cum_death_msgs_shape_enabled" ) == 1 )
+    {
+        cum_send_shape( GetConVarInt( "cum_death_msgs_shape" ), death_msgs[ RandomIntRange( 0, death_msgs.len() ) ] )
+        return
+    }
+
+    // Send a randomly chosen msg from the death_msgs array in chat
+    thread cum_send_delayed_msg( death_msgs[ RandomIntRange( 0, death_msgs.len() ) ] )
+}
+
+ClClient_MessageStruct function cum_send_response_msg( ClClient_MessageStruct msg_struct )
+{
+    // If the ConVar cum_responder_enabled is 0 then return and don't run the rest of the function
+    if( GetConVarInt( "cum_responder_enabled" ) == 0 )
+    {
+        return msg_struct
+    }
+    // If the msg is sent by the local client player return and end the function
+    if( msg_struct.player == GetLocalClientPlayer() && GetConVarInt( "cum_responder_self_reply" ) == 0 )
+    {
+        return msg_struct
+    }
+    if( GetConVarInt( "cum_responder_team" ) == 2 )
+    {
+        if( msg_struct.player.GetTeam() == GetLocalClientPlayer().GetTeam() )
+        {
+            return msg_struct
+        }
+    }
+    if( GetConVarInt( "cum_responder_team" ) == 1 )
+    {
+        if( msg_struct.player.GetTeam() != GetLocalClientPlayer().GetTeam() )
+        {
+            return msg_struct
+        }
+    }
+
+    if( GetConVarString( "cum_responder_whitelist" ) != "" && GetConVarString( "cum_responder_whitelist" ) != msg_struct.player.GetPlayerName() )
+    {
+        return msg_struct
+    }
+    if( GetConVarInt( "cum_responder_msgs_mode" ) == 2 )
+    {
+        thread cum_send_delayed_msg( msg_struct.message )
+        return msg_struct
+    }
+
+    if( GetConVarInt( "cum_responder_reading_that_enabled" ) == 1 )
+    {
+        if( msg_struct.message.len() >= GetConVarInt( "cum_responder_reading_that_length" ) )
+        {
+            thread cum_send_delayed_msg( GetConVarString( "cum_responder_reading_that_msg" ) )
+            return msg_struct
+        }
+    }
+
+    // If the ConVar cum_responder_msgs doesn't have the splitter character defined in the ConVar cum_msgs_splitter then go ahead and send the single msg in the ConVar cum_responder_msgs and return to end the function
+    if( GetConVarString( "cum_responder_msgs" ).find( GetConVarString( "cum_msgs_splitter" ) ) == null )
+    {
+        // Create a string that will have proxies replaced if it contains them
+        string response_msg = GetConVarString( "cum_responder_msgs" )
+
+        // If the ConVar cum_responder_msgs contains the string from the ConVar cum_victim_name_proxy then replace the proxy in the variable string with the victim's name
+        if( GetConVarString( "cum_responder_msgs" ).find( GetConVarString( "cum_responder_sender_name_proxy" ) ) != null )
+        {
+            response_msg = StringReplace( response_msg, GetConVarString( "cum_responder_sender_name_proxy" ), msg_struct.player.GetPlayerName() )
+        }
+        if( GetConVarString( "cum_responder_msg_contains" ) != "" )
+        {
+            if( msg_struct.message.tolower().find( GetConVarString( "cum_responder_msg_contains" ).tolower() ) != null )
+            {
+                thread cum_send_delayed_msg( response_msg )
+            }
+            return msg_struct
+        }
+        thread cum_send_delayed_msg( response_msg )
+        return msg_struct
+    }
+
+    // Make an array of the msgs from the ConVar cum_responder_msgs
+    array<string> response_msgs = split( GetConVarString( "cum_responder_msgs" ), GetConVarString( "cum_msgs_splitter" ) )
+
+    // Loop through each msg in the response_msgs array and check if it contains the string from the ConVar cum_responder_sender_name_proxy.
+    foreach( msg_index, msg in response_msgs )
+    {
+        // If the msg in the loop contains the string from the ConVar cum_sesponder_sender_name_proxy then replace the msg in the array response_msgs with a new string with the proxy replaced with the victim's name
+        if( msg.find( GetConVarString( "cum_responder_sender_name_proxy" ) ) != null )
+        {
+            response_msgs.remove( msg_index )
+            response_msgs.insert( msg_index, StringReplace( msg, GetConVarString( "cum_responder_sender_name_proxy" ), msg_struct.player.GetPlayerName() ) )
+        }
+    }
+
+    /*foreach( msg_index, msg in response_msgs )
+    {
+        if( msg.find( GetConVarString( "cum_responder_msg_contains_proxy" ) ) != null && msg_struct.message.tolower().find( split( response_msgs[ msg_index ], GetConVarString( "cum_responder_msg_contains_proxy" ) )[1] ) != null )
+        {
+            response_msgs.remove( msg_index )
+            response_msgs.insert( msg_index, split( response_msgs[ msg_index ], GetConVarString( "cum_responder_msg_contains_proxy" ) )[0] )
+        }
+        if(  )
+        {
+            response_msgs.remove( msg_index )
+        }
+    }*/
+
+    if( GetConVarString( "cum_responder_msg_contains" ) != "" )
+    {
+        if( msg_struct.message.tolower().find( GetConVarString( "cum_responder_msg_contains" ).tolower() ) != null )
+        {
+            if( GetConVarInt( "cum_responder_msgs_mode" ) == 0 )
+            {
+                // Send a randomly chosen msg from the response_msgs array in chat
+                thread cum_send_delayed_msg( response_msgs[ RandomIntRange( 0, response_msgs.len() ) ] )
+                return msg_struct
+            }
+            if( GetConVarInt( "cum_responder_msgs_mode" ) == 1 )
+            {
+                thread cum_send_delayed_msg( response_msgs[ next_response_msg_index ] )
+                if( next_response_msg_index == response_msgs.len() - 1 )
+                {
+                    next_response_msg_index = 0
+                    return msg_struct
+                }
+                if( next_response_msg_index < response_msgs.len() )
+                {
+                    next_response_msg_index += 1
+                }
+            }
+        }
+        return msg_struct
+    }
+    // If the ConVar cum_responder_msgs_mode is set to 0 (random mode) then pick a random msg from the array
+    if( GetConVarInt( "cum_responder_msgs_mode" ) == 0 )
+    {
+        // Send a randomly chosen msg from the response_msgs array in chat
+        thread cum_send_delayed_msg( response_msgs[ RandomIntRange( 0, response_msgs.len() ) ] )
+        return msg_struct
+    }
+    if( GetConVarInt( "cum_responder_msgs_mode" ) == 1 )
+    {
+        thread cum_send_delayed_msg( response_msgs[ next_response_msg_index ] )
+        if( next_response_msg_index == response_msgs.len() - 1 )
+        {
+            next_response_msg_index = 0
+            return msg_struct
+        }
+        if( next_response_msg_index < response_msgs.len() )
+        {
+            next_response_msg_index += 1
+        }
+    }
+    return msg_struct
+}
+
+// Function for creating and sending shaped msgs
+void function cum_send_shape( int shape_value, string msg )
+{
+    switch( shape_value )
+    {
+        // Line
+        case 0:
+            // Start thread for creating line shape in chat
+            thread cum_create_line_shape( msg )
+            break
+        // Sine Wave
+        case 1:
+            // Start thread for creating sine wave shape in chat
+            thread cum_create_sinewave_shape( msg )
+            break
+        default:
+            // Start thread for creating line shape in chat
+            thread cum_create_line_shape( msg )
+            break
+    }
+}
+
+void function cum_create_line_shape( string msg )
+{
+    for( var i = 0; i < 15; i += 1 ) {
+        GetLocalClientPlayer().ClientCommand( "say " + msg )
+        wait( GetConVarFloat( "cum_shapes_spacing_time" ) )
+    }
+}
+void function cum_create_sinewave_shape( string msg )
+{
+    foreach( sine_wave_offset in sine_wave_offsets ) {
+        GetLocalClientPlayer().ClientCommand( "say " + sine_wave_offset + msg )
+        wait( GetConVarFloat( "cum_shapes_spacing_time" ) )
+    }
+}
+void function cum_send_delayed_msg( string msg )
+{
+    wait( GetConVarFloat( "cum_msg_delay" ) )
+    if( GetConVarInt( "cum_typing_delay_enabled" ) == 1 )
+    {
+        for( int i = 0;i < msg.len();i += 1 )
+        {
+            wait( 1/GetConVarFloat( "cum_typing_speed" ) )
+        }
+    }
+    GetLocalClientPlayer().ClientCommand( "say " + msg )
+}
