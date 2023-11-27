@@ -123,7 +123,7 @@
         },
         {
             "Name": "cum_responder_reading_that_length",
-            "DefaultValue": "80"
+            "DefaultValue": "45"
         },
         {
             "Name": "cum_responder_reading_that_msg",
