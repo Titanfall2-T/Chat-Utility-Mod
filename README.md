@@ -1,7 +1,5 @@
 # Chat Utility Mod (CUM)
 
-## Finally, a public update after more than a year!
-
 This epic mod sends messages based on various in-game actions of you and other players!
 
 ## How To Use CUM
@@ -9,7 +7,7 @@ This mod has many convars, to get started open console and type `cum_` to see th
 
 If you want to have multiple different messages that are randomly selected when you kill someone, simply put multiple messages in the convar `cum_kill_msgs` and separate them with a `|` character like this : `cum_kill_msgs "your first message|your second message|your third message"`
 
-There are also different modes that you can use, for example with kill messages you can either use the random mode which is on by default, or by setting `cum_kill_msgs_mode 0` or you can use the list mode by setting `cum_kill_msgs_mode 1`, which will send your messages in the order they're put in the convar. For the responder there are 3 modes. Random mode which is on by default, or by setting `cum_responder_msgs_mode 0`, there's also list mode by setting `cum_responder_messages_mode 1` which is the same as the list mode for kill messaages, and there's also the copy-cat mode which sends the same message as the person it's responding to.
+There are also different modes that you can use, for example with kill messages you can either use the random mode which is on by default, or by setting `cum_kill_msgs_mode 0` or you can use the list mode by setting `cum_kill_msgs_mode 1`, which will send your messages in the order they're put in the convar. For the responder there are 3 modes. Random mode which is on by default, or by setting `cum_responder_msgs_mode 0`, there's also list mode by setting `cum_responder_messages_mode 1` which is the same as the list mode for kill messaages, and there's also the copy-cat mode which sends the same message as the person it's responding to, it's `cum_responder_msgs_mode 2` You can also change what team it responds to using `cum_responder_team` when set to 0 it responds to both teams, when set to 1 it responds only to your team, when set to 2 it responds only to enemy team. You can also use the new "reading that" function added in CUM v1.4.0, which essentially responds to a message with a certain length with a specific message. To enable it you can use `cum_responder_reading_that_enabled 1` and to set the message you can use `cum_responder_reading_that_msg` also you can set the lenght required for it to respond with that message using `cum_responder_reading_that_length`, the default is 45
 
 There are more settings for the responder which are listed below
 - `cum_responder_whitelist` This convar current only takes 1 username of a player you want to target with the responder, in the future it may be able to take more than 1 player at a time.
