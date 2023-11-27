@@ -115,7 +115,7 @@
         },
         {
             "Name": "cum_typing_speed",
-            "DefaultValue": "2.5"
+            "DefaultValue": "45"
         },
         {
             "Name": "cum_responder_reading_that_enabled",
