@@ -26,3 +26,36 @@ If you really want to spam (which I do not recommened and may or may not put you
 - `cum_death_msgs_shape` : changes the shape of the shapes feature for death messages, 0 is a line and 1 is a sine wave
 - `cum_suicide_msgs_shape_enabled` : Sets whether or not the shapes feature for suicide messages is enabled
 - `cum_suicide_msgs_shape` : changes the shape of the shapes feature for suicide messages, 0 is a line and 1 is a sine wave
+
+## List of all ConVars and their uses
+- `cum_kill_msgs_enabled` : whether kill messages are on or not. 0 for off and 1 for on.
+- `cum_kill_msgs_shape_enabled` : whether to use shapes with kill messages or not. 0 for off and 1 for on.
+- `cum_kill_msgs_shape` : what shape to use for kill messages. 0 for a 15 message straight line, 1 for a sine wave.
+- `cum_kill_msgs_mode` : what mode to use for kill messages. 0 for random message, 1 for list (in order from start to finish)
+- `cum_death_msgs_enabled` : whether death messages are on or not. 0 for off and 1 for on.
+- `cum_death_msgs_shape_enabled` : whether to use shapes with death messages or not. 0 for off and 1 for on.
+- `cum_death_msgs_shape` : what shape to use for death messages. 0 for a 15 message straight line, 1 for a sine wave.
+- `cum_suicide_msgs_enabled` : whether suicide messages are on or not. 0 for off and 1 for on.
+- `cum_suicide_msgs_shape_enabled` : whether to use shapes with suicide messages or not. 0 for off and 1 for on.
+- `cum_suicide_msgs_shape` : what shape to use for suicide messages. 0 for a 15 message straight line, 1 for a sine wave.
+- `cum_msgs_splitter` : what character to use to split messages in message lists.
+- `cum_shapes_spacing_time` : how much time (in seconds) should be between each message when using shapes.
+- `cum_victim_name_proxy` : what string should be replaced with the victim name in messages.
+- `cum_attacker_name_proxy` : what string should be replaced with the attacker name in messages.
+- `cum_kill_msgs` : the kill message/messages to use.
+- `cum_death_msgs` : the death message/messages to use.
+- `cum_suicide_msgs` : the suicide message_messages to use.
+- `cum_msg_delay` : the set message delay to use in seconds.
+- `cum_responder_enabled` : whether responder messages are on or not. 0 for off and 1 for on.
+- `cum_responder_msgs` : the responder message/messages to use.
+- `cum_responder_msgs_mode` : what mode to use for responder messages. 0 for random, 1 for list (in order from start to finish), 2 for copy cat (sends the same message it's responding to back).
+- `cum_responder_sender_name_proxy` : what string should be replaced with the sender name in responder messages.
+- `cum_respodner_msg_contains` : if left blank, this will do nothing, but if it is changed the responder will only respond to messages containing the string in this ConVar
+- `cum_responder_team` : what team to respond to, 0 for all teams, 1 for your team, 2 for enemy team.
+- `cum_responder_whitelist` : Currently only works with 1 player name, if this convar is not blank the responder will only respond to messages sent by the username put in this ConVar.
+- `cum_responder_self_reply` : whether the responder should reply to your messages. 0 for off and 1 for on.
+- `cum_typing_delay_enabled` : whether messages should be sent with a delay based on a set typing speed (set in `cum_typing_speed`)
+- `cum_typing_speed` : Typing speed for `cum_typing_delay_enabled` in characters per second.
+- `cum_responder_reading_that_enabled` : whether to send "reading that" responder messages. If enabled a the responder will respond to messages over a certain length with a special message.
+- `cum_responder_reading_that_length` : the required message length for the "reading that" feature to respond to the message
+- `cum_responder_reading_that_msg` : message to send when using "reading that" feature
