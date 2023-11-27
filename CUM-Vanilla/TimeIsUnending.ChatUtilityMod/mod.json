@@ -1,0 +1,150 @@
+{
+    "Name": "Chat Utility Mod",
+    "Description": "Configurable utility mod for in-game chat\n\nMade by TimeIsUnending",
+    "Version": "1.5.0",
+
+    "LoadPriority": "0",
+    "ConVars": [
+        {
+            "Name": "cum_kill_msgs_enabled",
+            "DefaultValue": "0"
+        },
+        {
+            "Name": "cum_kill_msgs_shape_enabled",
+            "DefaultValue": "0"
+        },
+        {
+            "Name": "cum_kill_msgs_shape",
+            "DefaultValue": "0"
+        },
+        {
+            "Name": "cum_kill_msgs_mode",
+            "DefaultValue": "0"
+        },
+        {
+            "Name": "cum_death_msgs_enabled",
+            "DefaultValue": "0"
+        },
+        {
+            "Name": "cum_death_msgs_shape_enabled",
+            "DefaultValue": "0"
+        },
+        {
+            "Name": "cum_death_msgs_shape",
+            "DefaultValue": "0"
+        },
+        {
+            "Name": "cum_suicide_msgs_enabled",
+            "DefaultValue": "0"
+        },
+        {
+            "Name": "cum_suicide_msgs_shape_enabled",
+            "DefaultValue": "0"
+        },
+        {
+            "Name": "cum_suicide_msgs_shape",
+            "DefaultValue": "0"
+        },
+        {
+            "Name": "cum_msgs_splitter",
+            "DefaultValue": "|"
+        },
+        {
+            "Name": "cum_shapes_spacing_time",
+            "DefaultValue": "0.6"
+        },
+        {
+            "Name": "cum_victim_name_proxy",
+            "DefaultValue": "@vn"
+        },
+        {
+            "Name": "cum_attacker_name_proxy",
+            "DefaultValue": "@an"
+        },
+        {
+            "Name": "cum_kill_msgs",
+            "DefaultValue": "Default Kill Message"
+        },
+        {
+            "Name": "cum_death_msgs",
+            "DefaultValue": "Default Death Message"
+        },
+        {
+            "Name": "cum_suicide_msgs",
+            "DefaultValue": "Default Suicide Message"
+        },
+        {
+            "Name": "cum_msg_delay",
+            "DefaultValue": "0.0"
+        },
+        {
+            "Name": "cum_responder_enabled",
+            "DefaultValue": "0"
+        },
+        {
+            "Name": "cum_responder_msgs",
+            "DefaultValue": "Default Reponder Message"
+        },
+        {
+            "Name": "cum_responder_msgs_mode",
+            "DefaultValue": "0"
+        },
+        {
+            "Name": "cum_responder_sender_name_proxy",
+            "DefaultValue": "@sn"
+        },
+        {
+            "Name": "cum_responder_msg_contains",
+            "DefaultValue": ""
+        },
+        {
+            "Name": "cum_responder_team",
+            "DefaultValue": "0"
+        },
+        {
+            "Name": "cum_responder_whitelist",
+            "DefaultValue": ""
+        },
+        {
+            "Name": "cum_responder_self_reply",
+            "DefaultValue": "0"
+        },
+        {
+            "Name": "cum_typing_delay_enabled",
+            "DefaultValue": "0"
+        },
+        {
+            "Name": "cum_typing_speed",
+            "DefaultValue": "2.5"
+        },
+        {
+            "Name": "cum_responder_reading_that_enabled",
+            "DefaultValue": "0"
+        },
+        {
+            "Name": "cum_responder_reading_that_length",
+            "DefaultValue": "80"
+        },
+        {
+            "Name": "cum_responder_reading_that_msg",
+            "DefaultValue": "I ain't readin allat"
+        }
+    ],
+    "Scripts": [
+        {
+            "Path": "_custom_codecallbacks_client.gnut",
+            "RunOn": "CLIENT"
+        },
+        {
+            "Path": "client/cl_chat.gnut",
+            "RunOn": "CLIENT"
+        },
+        {
+            "Path": "cum.gnut",
+            "RunOn": "CLIENT && MP",
+            "ClientCallback": {
+                "Before": "cum_Init"
+            }
+        }
+    ]
+}
